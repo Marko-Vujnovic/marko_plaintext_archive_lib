@@ -47,6 +47,8 @@ fn roundtrip_t() -> core::result::Result<(), std::io::Error> { tokio::runtime::R
     unpack2(&serialized_file, &produced_folders_parent);
     assert!(folders_are_the_same(&orig_folder, &produced_folder)?);
 
+    unpack2("tests/ExampleProject.mpa", &produced_folders_parent);
+    assert!(folders_are_the_same(&orig_folder, &produced_folder)?);
 
     let script_project: marko_fs_types::Folder = serde_yaml::from_str(&std::fs::read_to_string(&serialized_file).expect("Something went wrong reading the file")).unwrap();
 
