@@ -31,17 +31,23 @@ fn yaml_beautify(serialized_str: &str) -> std::string::String {
 fn roundtrip_t() -> core::result::Result<(), std::io::Error> { tokio::runtime::Runtime::new().unwrap().block_on(async {
     std::fs::create_dir_all(&get_app_folder())?;
 
+    let serialized_file = cwd().join(format!("tests/{}.mpa", "ExampleProject")); // .mpa - "Marko plain-text archive"
+
     let orig_folder = cwd().join("tests/ExampleProject");
     let in_ram_fs_tree = pack(&orig_folder)?;
 
     use std::io::Write; write!(std::fs::File::create(cwd().join(format!("tests/{}.mpa", "ExampleProject")))?, "{}", yaml_beautify(&serde_yaml::to_string(&in_ram_fs_tree).unwrap()))?;
 
     let produced_folder = cwd().join(format!("produced/{}", "ExampleProject"));
-    unpack(&in_ram_fs_tree, &produced_folder.parent().unwrap().to_path_buf());
+    let produced_folders_parent = produced_folder.parent().unwrap().to_path_buf();
 
+    unpack(&in_ram_fs_tree, &produced_folders_parent);
     assert!(folders_are_the_same(&orig_folder, &produced_folder)?);
 
-    let serialized_file = cwd().join(format!("tests/{}.mpa", "ExampleProject")); // .mpa - "Marko plain-text archive"
+    unpack2(&serialized_file, &produced_folders_parent);
+    assert!(folders_are_the_same(&orig_folder, &produced_folder)?);
+
+
     let script_project: marko_fs_types::Folder = serde_yaml::from_str(&std::fs::read_to_string(&serialized_file).expect("Something went wrong reading the file")).unwrap();
 
     let serialized_str = serde_yaml::to_string(&script_project).unwrap();
