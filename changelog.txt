@@ -1,0 +1,3 @@
+JetbrainsIdea.sh
+ssh://git@github.com/___ url so that auth uses the key from $HOME/.ssh/ for private repos
+Fixed all warnings
