@@ -1,3 +1,5 @@
 JetbrainsIdea.sh
 ssh://git@github.com/___ url so that auth uses the key from $HOME/.ssh/ for private repos
 Fixed all warnings
+
+json -> yaml. Switched because yaml has multiline strings. AND nothing needs to be escaped (\", \'). A lot more readable and diff-able.
